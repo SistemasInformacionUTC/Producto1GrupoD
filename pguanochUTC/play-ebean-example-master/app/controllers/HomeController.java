@@ -22,44 +22,19 @@ public class HomeController extends Controller {
 	public HomeController(FormFactory formFactory) {
 		this.formFactory = formFactory;
 	}
-
-	/**
-	 * This result directly redirect to application home.
-	 */
 	public Result GO_HOME = Results.redirect(routes.HomeController.list(0,
 			"name", "asc", ""));
 
-	/**
-	 * Handle default path requests, redirect to computers list
-	 */
 	public Result index() {
 		return GO_HOME;
 	}
 
-	/**
-	 * Display the paginated list of computers.
-	 *
-	 * @param page
-	 *            Current page number (starts from 0)
-	 * @param sortBy
-	 *            Column to be sorted
-	 * @param order
-	 *            Sort order (either asc or desc)
-	 * @param filter
-	 *            Filter applied on computer names
-	 */
 	public Result list(int page, String sortBy, String order, String filter) {
 		return ok(views.html.list.render(
 				Computer.page(page, 10, sortBy, order, filter), sortBy, order,
 				filter));
 	}
 
-	/**
-	 * Display the 'edit form' of a existing Computer.
-	 *
-	 * @param id
-	 *            Id of the computer to edit
-	 */
 	public Result edit(Long id) {
 		Form<Computer> computerForm = formFactory.form(Computer.class).fill(
 				Computer.find.byId(id));

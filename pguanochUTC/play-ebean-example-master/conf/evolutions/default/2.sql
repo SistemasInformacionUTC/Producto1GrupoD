@@ -620,7 +620,10 @@ insert into computer (id,name,introduced,discontinued,company_id) values (572,'D
 insert into computer (id,name,introduced,discontinued,company_id) values (573,'Gateway LT3103U','2008-01-01',null,null);
 insert into computer (id,name,introduced,discontinued,company_id) values (574,'iPhone 4S','2011-10-14',null,1);
 
+insert into ram (id,descripcion,capacidad,velocidad,computer_id) values (1,'ola','34','36',1);
+
 # --- !Downs
 
 delete from computer;
 delete from company;
+delete from ram;
