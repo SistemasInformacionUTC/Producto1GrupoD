@@ -14,6 +14,14 @@ create table computer (
   introduced                timestamp,
   discontinued              timestamp,
   company_id                bigint,
+  
+  constraint pk_computer primary key (id))
+;
+
+create table Tarjetav (
+  id                        bigint not null,
+  peso                      int,
+  capacidad                 int,
   constraint pk_computer primary key (id))
 ;
 
@@ -21,9 +29,13 @@ create sequence company_seq start with 1000;
 
 create sequence computer_seq start with 1000;
 
+create sequence tarjetav_seq start with 1000;
+
 alter table computer add constraint fk_computer_company_1 foreign key (company_id) references company (id) on delete restrict on update restrict;
 create index ix_computer_company_1 on computer (company_id);
 
+alter table computer add constraint fk_computer_tarjetav_2 foreign key (tarjetav_id) references tarjetav (id) on delete restrict on update restrict;
+create index ix_computer_tarjetav_1 on computer (tarjetav_id);
 
 # --- !Downs
 
@@ -33,9 +45,15 @@ drop table if exists company;
 
 drop table if exists computer;
 
+drop table if exists tarjetav;
+
+drop table if exists tarjeta;
+
 SET REFERENTIAL_INTEGRITY TRUE;
 
 drop sequence if exists company_seq;
 
 drop sequence if exists computer_seq;
+
+drop sequence if exists tarjetav_seq;
 

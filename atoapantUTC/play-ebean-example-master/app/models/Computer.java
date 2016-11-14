@@ -32,6 +32,7 @@ public class Computer extends Model {
 
 	@ManyToOne
 	public Company company;
+	
 
 	/**
 	 * Generic query helper for entity Computer with id Long
@@ -39,6 +40,10 @@ public class Computer extends Model {
 	public static Find<Long, Computer> find = new Find<Long, Computer>() {
 	};
 
+	
+	public static Find<Long, TarjetaVideo> find1 = new Find<Long, TarjetaVideo>() {
+		
+	};
 	/**
 	 * Return a paged list of computer
 	 *

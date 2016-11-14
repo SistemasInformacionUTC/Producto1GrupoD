@@ -76,6 +76,7 @@
             <tbody>
 
                 @for(computer <- currentPage.getList) {
+                
                     <tr>
                         <td><a href="@routes.HomeController.edit(computer.id)">@computer.name</a></td>
                         <td>
