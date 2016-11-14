@@ -1,0 +1,44 @@
+package models;
+
+import java.util.*;
+
+import javax.persistence.*;
+
+import play.db.ebean.*;
+import play.data.validation.*;
+
+
+
+/**
+ * Company entity managed by Ebean
+ */
+@Entity 
+public class TarjetaVideo extends com.avaje.ebean.Model {
+
+    private static final long serialVersionUID = 1L;
+
+	@Id
+    public Long id;
+    
+    public int peso;
+
+    public int capacidad;
+    
+    @ManyToOne
+	public Computer computer;
+	
+    
+    /**
+     * Generic query helper for entity Company with id Long
+     */
+    public static Find<Long,TarjetaVideo> find = new Find<Long,TarjetaVideo>(){};
+
+    public static Map<String,String> options() {
+        LinkedHashMap<String,String> options = new LinkedHashMap<String,String>();
+        for(TarjetaVideo c: TarjetaVideo.find.orderBy("id").findList()) {
+            options.put(c.id.toString(), c.peso,c.capacidad);
+        }
+        return options;
+    }
+
+}

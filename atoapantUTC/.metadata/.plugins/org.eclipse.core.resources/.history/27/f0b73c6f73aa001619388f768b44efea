@@ -1,0 +1,142 @@
+package controllers;
+
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Transaction;
+import play.mvc.*;
+import play.data.*;
+import static play.data.Form.*;
+
+import models.*;
+
+import javax.inject.Inject;
+import javax.persistence.PersistenceException;
+
+/**
+ * Manage a database of computers
+ */
+public class HomeCotroller2 extends Controller {
+
+	private FormFactory formFactory;
+
+	@Inject
+	public HomeCotroller2(FormFactory formFactory) {
+		this.formFactory = formFactory;
+	}
+
+	/**
+	 * This result directly redirect to application home.
+	 */
+	public Result GO_HOME = Results.redirect(routes.HomeController.list(0,
+			"name", "asc", ""));
+
+	/**
+	 * Handle default path requests, redirect to computers list
+	 */
+	public Result index() {
+		return GO_HOME;
+	}
+
+	/**
+	 * Display the paginated list of computers.
+	 *
+	 * @param page
+	 *            Current page number (starts from 0)
+	 * @param sortBy
+	 *            Column to be sorted
+	 * @param order
+	 *            Sort order (either asc or desc)
+	 * @param filter
+	 *            Filter applied on computer names
+	 */
+	public Result list(int page, String sortBy, String order, String filter) {
+		return ok(views.html.list.render(
+				Computer.page(page, 10, sortBy, order, filter), sortBy, order,
+				filter));
+	}
+
+	/**
+	 * Display the 'edit form' of a existing Computer.
+	 *
+	 * @param id
+	 *            Id of the computer to edit
+	 */
+	public Result edit(Long id) {
+		Form<TarjetaVideo> TarjetaVideoForm = formFactory.form(TarjetaVideo.class).fill(
+				TarjetaVideo.find.byId(id));
+		return ok(views.html.editForm.render(id, TarjetaVideoForm));
+	}
+
+	/**
+	 * Handle the 'edit form' submission
+	 *
+	 * @param id
+	 *            Id of the computer to edit
+	 */
+	public Result update(Long id) throws PersistenceException {
+		Form<TarjetaVideo> TarjetaVideoForm = formFactory.form(TarjetaVideo.class)
+				.bindFromRequest();
+		if (TarjetaVideoForm.hasErrors()) {
+			return badRequest(views.html.editForm.render(id, TarjetaVideoForm));
+		}
+
+		Transaction txn = Ebean.beginTransaction();
+		try {
+			TarjetaVideo savedTarjetaVideo = TarjetaVideo.find.byId(id);
+			if (savedTarjetaVideo != null) {
+				TarjetaVideo newTarjetaVideoData = TarjetaVideoForm.get();
+				savedTarjetaVideo.computer = newTarjetaVideoData.computer;
+				savedTarjetaVideo.discontinued = newTarjetaVideoData.discontinued;
+				savedTarjetaVideo.introduced = newTarjetaVideoData.introduced;
+				savedTarjetaVideo.name = newTarjetaVideoData.name;
+
+				savedTarjetaVideo.update();
+				flash("success", "TarjetaVideo " + TarjetaVideoForm.get().name
+						+ " has been updated");
+				txn.commit();
+			}
+		} finally {
+			txn.end();
+		}
+
+		return GO_HOME;
+	}
+
+	/**
+	 * Display the 'new computer form'.
+	 */
+	public Result create() {
+		Form<TarjetaVideo> TarjetaVideoForm = formFactory.form(TarjetaVideo.class);
+		return ok(views.html.createForm.render(TarjetaVideoForm));
+	}
+
+	/**
+	 * Handle the 'new computer form' submission
+	 */
+	private static long count = 1005;
+    public Result save() {
+    	
+    	TarjetaVideo c1= new TarjetaVideo();
+        Form<TarjetaVideo> TarjetaVideoForm = formFactory.form(TarjetaVideo.class).bindFromRequest();
+        if(computerForm.hasErrors()) {
+            return badRequest(views.html.createForm.render(TarjetaVideoForm));
+        }
+        c1=TarjetaVideoForm.get();
+        c1.id=(long) ++count;
+       c1.save();
+        
+     
+		// computerForm.get().save();
+		flash("success", "TarjetaVideo " + TarjetaVideoForm.get().name	+ " has been created");
+		return GO_HOME;
+	}
+
+	/**
+	 * Handle computer deletion
+	 */
+	public Result delete(Long id) {
+		Computer.find.ref(id).delete();
+		flash("success", "TarjetaVideo has been deleted");
+		return GO_HOME;
+	}
+
+}

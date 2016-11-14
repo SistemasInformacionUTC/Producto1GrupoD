@@ -1,0 +1,70 @@
+package models;
+
+import java.util.Date;
+
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+import play.data.format.Formats;
+import play.data.validation.Constraints;
+
+import com.avaje.ebean.Model;
+import com.avaje.ebean.PagedList;
+import com.avaje.ebean.Model.Find;
+
+public class TarjetaVideo extends Model{
+
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	public Long id;
+
+	@Constraints.Required
+	public String marca;
+
+	@Id
+	public int capacidad;
+
+	@Id
+	public int peso;
+
+	@ManyToOne
+	public Company computer;
+
+	/**
+	 * Generic query helper for entity Computer with id Long
+	 */
+	public static Find<Long, TarjetaVideo> find = new Find<Long, TarjetaVideo>() {
+	};
+
+	/**
+	 * Return a paged list of computer
+	 *
+	 * @param page
+	 *            Page to display
+	 * @param pageSize
+	 *            Number of computers per page
+	 * @param sortBy
+	 *            Computer property used for sorting
+	 * @param order
+	 *            Sort order (either or asc or desc)
+	 * @param filter
+	 *            Filter applied on the name column
+	 */
+	public static PagedList<TarjetaVideo> page(int page, int pageSize,
+			String sortBy, String order, String filter) {
+		System.out.println("filter:" + filter);
+		return find.where().ilike("name", "%" + filter + "%")
+				.orderBy(sortBy + " " + order).fetch("company")
+				.findPagedList(page, pageSize);
+
+	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+}
