@@ -112,19 +112,22 @@ public class HomeController extends Controller {
 	/**
 	 * Handle the 'new computer form' submission
 	 */
-	private static long count = 1005;
-    public Result save() {
-    	
-    	Computer c1= new Computer();
-        Form<Computer> computerForm = formFactory.form(Computer.class).bindFromRequest();
-        if(computerForm.hasErrors()) {
-            return badRequest(views.html.createForm.render(computerForm));
-        }
-        c1=computerForm.get();
-        c1.id=(long) ++count;
-       c1.save();
-        
-     
+	private static long count =700;
+	public Result save() {
+
+		Computer c1 = new Computer();
+		Form<Computer> computerForm = formFactory.form(Computer.class).bindFromRequest();
+		// Form<Computer> computerForm =
+		// formFactory.form(Computer.class).fill(c1)
+		// .bindFromRequest();
+
+		if (computerForm.hasErrors()) {
+			return badRequest(views.html.createForm.render(computerForm));
+		}
+		c1 = computerForm.get();
+		//c1.id = c1.id.MAX_VALUE + 1;
+		c1.id = (long) ++count;
+		c1.save();
 		// computerForm.get().save();
 		flash("success", "Computer " + computerForm.get().name	+ " has been created");
 		return GO_HOME;

@@ -28,11 +28,8 @@ public class TarjetaVideo extends com.avaje.ebean.Model {
     @Constraints.Required
     public int capacidad;
     
-    
     /**
      * Generic query helper for entity Company with id Long
-     * @Constraints.Required
-    public int capacidad;
      */
     public static Find<Long,TarjetaVideo> find = new Find<Long,TarjetaVideo>(){};
 
